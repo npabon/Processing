@@ -4,3 +4,10 @@ modes
 libraries
 examples
 .DS_Store
+*.mov
+*.png
+*.pdf
+*.svg
+*.jpeg
+*.tif
+*.tiff
