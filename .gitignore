@@ -11,3 +11,5 @@ examples
 *.jpeg
 *.tif
 *.tiff
+*.jpg
+*.ai
