@@ -23,11 +23,12 @@ def setup():
             next[x].append({ 'a': 1, 'b': 0 })
             
     # seed some b at random locations
+    margin = 100
     num_seeds = 4
     r = 5
     for i in range(num_seeds):
-        cx = floor(random(100,width-100))
-        cy = floor(random(100, height-100))
+        cx = floor(random(margin,width-margin))
+        cy = floor(random(margin, height-margin))
         for x in range(cx-r,cx+r):
             for y in range(cy-r,cy+r):
                 if (x-cx)**2 + (y-cy)**2 <= r**2:
@@ -64,8 +65,8 @@ def draw():
     # a deep copy takes far too long
     swap()
     
-    if time < 40000 and time % 2 == 0:
-        frame_num = str(time/2).zfill(5)
+    if time < 60000 and time % 3 == 0:
+        frame_num = str(time/3).zfill(5)
         file_name = "frames/react_diff_{}.png".format(frame_num)
         save(file_name)
     
