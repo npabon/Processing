@@ -1,17 +1,23 @@
 import copy
 
-def init(n, r):
+
+def init(n,hy):
+    #perlin noise params
+    xoff = random(10000)
+    dx = 0.05
+    noisemag = 100
+    
+    scl = width/(n-2)
     points = [];
     for i in range(n):
-        rads = (float(i)/n) * TWO_PI # goes around the circle in n steps
-        v_x = r * cos(rads)
-        v_y = r * sin(rads)
-        #initially the corners have the most noise
-        v_z = random(1) # noise control
+        v_x = i * scl
+        v_y = hy # add perlin noise here
+        v_z = 0 #random(1) # noise control
         v = PVector(v_x, v_y, v_z)
         points += [v]
     for b in range(7):
         points = interpolate(points)
+    points = [PVector(0,height,0)] + points + [PVector(width,height,0)]
     return points
         
 # function to add midpoints between every two points
@@ -21,11 +27,11 @@ def interpolate(points):
         p2 = points[i]
         p3 = generate_midpoint(p1,p2)
         points = splice(points, i, p3)
-    # close the gap btw beginning & end
-    p1 = points[len(points)-1]
-    p2 = points[0]
-    p3 = generate_midpoint(p1,p2)
-    points = splice(points, 0, p3)
+    # # close the gap btw beginning & end
+    # p1 = points[len(points)-1]
+    # p2 = points[0]
+    # p3 = generate_midpoint(p1,p2)
+    # points = splice(points, 0, p3)
     return points
 
 # insert element into array at specified index
@@ -39,7 +45,7 @@ def splice(arr, index, elem):
 def generate_midpoint(p1,p2):
     p3_x = (p1.x + p2.x) / 2
     p3_y = (p1.y + p2.y) / 2
-    p3_z = ((p1.z + p2.z) / 2) * .27 * random(.3, 2) # always reduces the noise
+    p3_z = ((p1.z + p2.z) / 2) * .27# * random(.3, 2) # always reduces the noise
     p3 = PVector(p3_x, p3_y, p3_z)
     p3 = move_nearby(p3, 150) # add noise
     return p3

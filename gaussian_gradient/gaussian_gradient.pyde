@@ -4,51 +4,50 @@ import random as rand
 add_library('svg')
 
 n=10
-r=250
 points = []
 current = []
-iter=0
 
 def setup():
-    global n, r, points
-    size(800,800)
-    
-    fill(0,22,65,10)
+    size(800,500)
+    background(255,255,255)
     noStroke()
-    frameRate(1)
-    blendMode(MULTIPLY)
-    #noLoop()
-    
-    points = init(n,r)
-    
+    #blendMode(MULTIPLY)
+    noLoop()
+        
     
     
 def draw():
-    global n, r, points, current, iter
-    iter += 1
+    global points, current
+    
+    #background(255,255,255)
+    
+    # aztek sunset colors: http://www.color-hex.com/color-palette/21517
+    darkred = color(62,2,0)
+    medred = color(255,0,0)
+    aqua = color(64,244,208)
+    orange = color(245,158,4)
+    
+    #filename="gaussian_stone_{}.svg".format(iter)
+    #beginRecord(SVG, filename)
     
     
-    # randomly select colors for background and foreground
-    # palette = rand.choice(nature_palettes_6_color.keys())
-    # colors = nature_palettes_6_color[palette]
-    colors = nature_palettes_6_color["rustic_tones_stone"]
-    rand.shuffle(colors)
-    background(colors[0])
-    
-    filename="gaussian_stone_{}.svg".format(iter)
-    beginRecord(SVG, filename)
-    fill(colors[1],5)
-    translate(width/2, height/2)
+    hy = 0
+    fill(orange,5)
+    points = init(n,hy)
     run(current, points)
-    points = init(n,r)
     
+    hy = height/4
+    fill(aqua,5)
+    points = init(n,hy)
+    run(current, points)
     
-    # num_shapes = 3
-    # for i in range(num_shapes):
-    #     pushMatrix()
-    #     translate(random(1)*width,random(1)*height)
-    #     # display shape
-    #     fill(colors[i+1],10)
-    #     run(current, points)
-    #     points = init(n,r)
-    #     popMatrix()
+    hy = height/2
+    fill(medred,5)
+    points = init(n,hy)
+    run(current, points)
+    
+    hy = 3*height/4
+    fill(darkred,5)
+    points = init(n,hy)
+    run(current, points)
+    
