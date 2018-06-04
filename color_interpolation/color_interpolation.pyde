@@ -1,4 +1,4 @@
-from random import choice
+import random as rand
 from palettes import nature_palettes_6_color
 
 THE_SEED = None
@@ -15,34 +15,37 @@ pad = 0
 tick = 1
 
 def setup():
-    global THE_SEED, cgrid
     
     size(1600,1000)
-    THE_SEED = floor(random(9999999))
-    randomSeed(THE_SEED)
     noStroke()
-    noLoop()
+    #noLoop()
     frameRate(1)
     
-    # put random colors in a cdimx x cdimy grid
-    palette = choice(nature_palettes_6_color)
-    print(palette)
+                
+def draw():
+    global THE_SEED, cgrid
     
+    THE_SEED = floor(random(9999999))
+    randomSeed(THE_SEED)
+    
+    background(random(255))
+    
+    # put random colors in a cdimx x cdimy grid
+    # palette = rand.choice(nature_palettes_6_color.keys())
+    palette = "color_dew"
+    colors = nature_palettes_6_color[palette]
+    rand.shuffle(colors)
+    print(palette)
     
     cgrid = []
     for i in range(cdimy):       # loop row by row
         crow = []
         for j in range(cdimx):
-            c = color(random(255),random(255),random(255),random(255))
+            c = color(colors[i+j],random(255))
             crow.append(c)
         cgrid.append(crow)
-                
-def draw():
     
-    #filename = "color_interp_{}.svg".format(THE_SEED)
-    #beginRecord(SVG, filename)
     
-    background(34)
     
     for y in range(dimy):
         for x in range(dimx):
@@ -76,7 +79,7 @@ def draw():
 
             rect(pad + w * x, pad + h * y, w, h)
     
-    filename_png = "color_interp_{}.png".format(THE_SEED)
+    filename_png = "{}/color_interp_{}.png".format(palette,THE_SEED)
     #save(filename_png)
     
     
