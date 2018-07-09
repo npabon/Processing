@@ -3,7 +3,7 @@ from palettes import nature_palettes_6_color
 
 THE_SEED = None
 
-cdimx = 3
+cdimx = 2
 cdimy = 2
 cgrid = []
 
@@ -29,21 +29,15 @@ def draw():
     THE_SEED = floor(random(9999999))
     randomSeed(THE_SEED)
     
-    background(random(34,255))
+    #background(random(34,255))
+    background('#222')
     
-    
-    # put random colors in a cdimx x cdimy grid
-    # palette = rand.choice(nature_palettes_6_color.keys())
-    palette = 'succulent_hues'
-    colors = nature_palettes_6_color[palette]
-    rand.shuffle(colors)
-    
+    # put random colors in a cdimx x cdimy grid    
     cgrid = []
     for i in range(cdimy):       # loop row by row
         crow = []
         for j in range(cdimx):
-            alpha = floor(random(100,255))
-            c = color(colors[i+j],alpha)
+            c = color(random(255),random(255),random(255),random(255))
             crow.append(c)
         cgrid.append(crow)
     
@@ -81,7 +75,7 @@ def draw():
 
             rect(pad + w * x, pad + h * y, w, h)
     
-    filename_png = "{}/color_interp_{}.png".format(palette,THE_SEED)
+    filename_png = "img/color_interp_{}.png".format(THE_SEED)
     save(filename_png)
     
     
