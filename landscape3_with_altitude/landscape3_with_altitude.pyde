@@ -4,8 +4,8 @@ n_particle_sets = 8
 particle_sets = []
 
 # initial distribution of particles
-sigmax = 180
-sigmay = 200
+sigmax = 210
+sigmay = 180
 
 
 def setup():
@@ -17,7 +17,7 @@ def setup():
     
     noFill()
     background(30)
-    stroke(200,100)
+    stroke(200,10)
     strokeWeight(0.7)
     smooth()
     
@@ -52,6 +52,7 @@ class Particle(object):
         self.pos = PVector(x,y)
         self.angle = angle # direction of travel, at construction is random
         self.val = 0
+        self.altitude = 0
         
     def update(self, index):
         
@@ -69,33 +70,51 @@ class Particle(object):
             
         # we want to be able to make the noise field symmetric, so we 
         # create n vector, which points to particle from center of canvas
-        nmagx = 1.2 # scales the ZOOM
-        nmagy = 1.2
-        nx = nmagx * map(self.pos.x, 0, width, -1, 1)
-        ny = nmagy * map(self.pos.y, 0, height, -1, 1)
+        
+        ## NOISE LANDSCAPE 1 (no perspective)
+        # nmagx = 1.8 # scales the ZOOM
+        # nmagy = 1.8
+        # nx = nmagx * map(self.pos.x, 0, width, -1, 1)
+        # ny = nmagy * map(self.pos.y, 0, height, -1, 1)
+        
+        ## NOISE LANDSCAPE 2 (some perspective)
+        # the height on the canvas scales the zoom level
+        # higher up is further away
+        nx = map(self.pos.y, 0, height + 100, 3, 0.5) * map(self.pos.x, 0, width, -1, 1)
+        ny = 2 * map(self.pos.y, 0, height + 100, 3, 0.5) * map(self.pos.y, 0, width, -1, 1)
+        nmag = 1
         n = PVector(nx,ny)
-        noise_field_val = noise(n.x + 41, n.y - 13)
+        noise_field_val = nmag * noise(n.x - 73, n.y + 825)
+        
+        self.altitude = noise_field_val
+        
         
         # perlin noise is always between 0 and 1, with most values around 0.5
-        
         # scaled offset due to the particle set
-        sc = 0.06 # MANIPULATE TO CHANGE APPEARANCE
-        set_idx = index - float(n_particle_sets) / 2
+        sc = 0.045 # MANIPULATE TO CHANGE APPEARANCE
+        set_idx = index - float(n_particle_sets) / float(2)
         noise_offset = sc * set_idx
         
         # so each particle set is offset by a different amount, meaning that they'll
         # each get displayed at different contours
-        nval = (noise_field_val + sc*index) % 1
+        nval = (noise_field_val + noise_offset) % 1
 
         # adjust angle of travel based on nval
-        self.angle += PI * map(nval, 0, 1, -1, 1)
+        self.angle += 3 * map(nval, 0, 1, -1, 1)
         self.val = nval
         
     def display(self, index):
-        if self.val > 0.5 and self.val < 0.52:
-            print(index)
+        if self.val > 0.482 and self.val < 0.518:
             pushMatrix()
-            translate(self.pos.x, self.pos.y)
-            rotate(self.angle)
+            
+            # adjust y position based on particle's altitude
+            # self.altitude is always between 0 and 1
+            # want the height differences to be more apparent near bottom of the canvas
+            # but increase dyb too much and the particles will not go below the bottom of the canvas
+            dya = 60
+            dyb = 50
+            dy = dya - self.altitude * dyb * map(self.pos.y, 0, height + 100, 1, 4)
+            translate(self.pos.x, self.pos.y + dy)
+            #rotate(self.angle)
             point(0,0)
             popMatrix()      
